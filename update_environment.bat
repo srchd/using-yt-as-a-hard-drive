@@ -12,5 +12,8 @@ for /f %%e in ('conda info --envs') do (
 if !ENV!=="" (
 	echo Env not found! Creating it from envs/Windows.yml
 	call conda env create -f envs/Windows.yml
+) else (
+	echo ENV found, updating environment...
+	call conda env update --name ythd --file envs/Windows.yml --prune
 )
 @echo on
