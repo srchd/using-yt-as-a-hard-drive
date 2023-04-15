@@ -1,7 +1,7 @@
 from typing import Any
 
 class Observable:
-    def __init__(self, initial_value=0) -> None:
+    def __init__(self, initial_value) -> None:
         self.data = initial_value
         self.callbacks = {}
 
