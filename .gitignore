@@ -1,3 +1,12 @@
+# Credential files
+src/youtube_client/credentials/credentials.json
+src/youtube_client/credentials/user_file.json
+
+src/youtube_client/upload_test_video.mp4
+
+'
+.idea
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
