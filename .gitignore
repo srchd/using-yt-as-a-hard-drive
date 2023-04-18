@@ -4,6 +4,8 @@ src/youtube/credentials/*.json
 
 src/youtube/upload_test_video.mp4
 
+*.mp4
+
 '
 .idea
 

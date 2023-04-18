@@ -16,7 +16,7 @@
             "name": "YTHD: App",
             "type": "python",
             "request": "launch",
-            "program": "src/app/app_main.py",
+            "program": "src/main.py",
             "console": "integratedTerminal"
         }
         // Need to add a custom configuration when we have the scripts

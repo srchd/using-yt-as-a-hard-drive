@@ -1,8 +1,10 @@
 import tkinter as tk
-from controller import Controller
+from .controller import Controller
 
-if __name__ == '__main__':
+def run() -> None:
     root = tk.Tk()
     root.withdraw()
     app = Controller(root)
     root.mainloop()
+
+    return
