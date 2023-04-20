@@ -1,4 +1,6 @@
 # Scripts for downloading youtube videos
+## USECASE 0 (ytdlp):
+>> python download_ytdlp.py <url> <br />
 ## USECASE 1:
 List out the available formats for video in <url>:
 >> python download_urllib.py https://www.youtube.com/watch?v=OTVE5iPMKLg&ab_channel=CGPGrey --formats <br />
