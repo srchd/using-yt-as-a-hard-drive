@@ -6,6 +6,8 @@ import sys
 import time
 import logging
 import typing
+import traceback
+from pprint import pprint
 
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
@@ -23,22 +25,40 @@ from globals import Credentials
 
 class YoutubeClient:
     def __init__(self):
-        self.client = YoutubeClient.get_build()
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.setLevel(logging.DEBUG)
         self.logger.addHandler(logging.StreamHandler())
 
-    @staticmethod
-    def get_build():
-        try:
-            credentials = google.oauth2.credentials.Credentials.from_authorized_user_file(Credentials.GENERATED_CLIENT_SECRETS_FILE)
-        except Exception as ex:
-            flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(Credentials.ORIGINAL_CLIENT_SECRETS_FILE, ClientSettings.SCOPES)
-            credentials = flow.run_local_server(port=8090)
-            with open(Credentials.GENERATED_CLIENT_SECRETS_FILE, "w") as f:
-                f.write(credentials.to_json())
+        self.client = self.get_build()
 
-        client = googleapiclient.discovery.build(ClientSettings.API_SERVICE_NAME, ClientSettings.API_VERSION, credentials=credentials)
+    @staticmethod
+    def __test_client(client):
+        request = client.channels().list(
+            part="snippet,contentDetails,statistics",
+            mine=True
+        )
+        response = request.execute()
+
+    def get_build(self):
+        client = None
+        retry = True
+
+        while retry:
+            try:
+                credentials = google.oauth2.credentials.Credentials.from_authorized_user_file(Credentials.GENERATED_CLIENT_SECRETS_FILE)
+                client = build(ClientSettings.API_SERVICE_NAME, ClientSettings.API_VERSION, credentials=credentials)
+                YoutubeClient.__test_client(client)
+            except Exception:
+                self.logger.info("Creating credentials")
+                flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(Credentials.ORIGINAL_CLIENT_SECRETS_FILE, ClientSettings.SCOPES)
+                credentials = flow.run_local_server(port=8090)
+                with open(Credentials.GENERATED_CLIENT_SECRETS_FILE, "w") as f:
+                    f.write(credentials.to_json())
+            finally:
+                retry = False
+
+        if client is None:
+            self.logger.warning("Couldn't build client")
 
         return client
 
@@ -81,9 +101,10 @@ class YoutubeClient:
                         self.logger.error(f"The upload failed with an unexpected response: {response}")
                         return
             except HttpError as ex:
-                if ex.resp.status in ClientSettings.RETRIABLE_STATUS_CODES:
+                if ex.status_code in ClientSettings.RETRIABLE_STATUS_CODES:
                     error = ex
-                    self.logger.warning(f"A retriable HTTP error {ex.resp.status} occurred:\n{ex.content}")
+                    self.logger.warning(f"A retriable HTTP error {ex.status_code} occurred:")
+                    self.logger.warning(traceback.format_exc())
                 else:
                     raise ex
             except ClientSettings.RETRIABLE_EXCEPTIONS as ex:
@@ -100,3 +121,27 @@ class YoutubeClient:
                 sleep_seconds = random.random() * max_sleep
                 self.logger.warning(f"Sleeping {sleep_seconds} seconds and then retrying...")
                 time.sleep(sleep_seconds)
+
+    def list_videos(self):
+        request = self.client.search().list(
+            part="snippet",
+            forMine=True,
+            maxResults=50,
+            type="video"
+        )
+        response = request.execute()
+
+        if not response:
+            return None
+
+        response = response["items"]
+        response = [r["id"] | r["snippet"] for r in response]
+        response = [{k: v for k, v in r.items() if k in ['videoId', 'publishedAt', 'publishTime', 'title', 'description']} for r in response]
+        response = [r | {"url": f"https://www.youtube.com/watch?v={r['videoId']}"} for r in response]
+
+        return response
+
+
+client = YoutubeClient()
+# client.upload_video(file_path="upload_test_video.mp4", title="aaaaaaaaaaaa")
+pprint(client.list_videos())
