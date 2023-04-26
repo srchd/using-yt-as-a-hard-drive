@@ -1,5 +1,3 @@
-Hi. Please put your credentials json file here, in this folder and name is 'credentials.json'.
-
 1. Go to https://console.cloud.google.com/
 2. Create a new project (selector in top left corner, then click New project)
 3. Give it a name and Create
@@ -29,5 +27,3 @@ Hi. Please put your credentials json file here, in this folder and name is 'cred
 20. Application type: Desktop app, give it a name and press Create
 21. Download JSON
 22. Put this JSON file into the credentials folder and name it "credentials.json"
-
-

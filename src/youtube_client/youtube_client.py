@@ -140,8 +140,3 @@ class YoutubeClient:
         response = [r | {"url": f"https://www.youtube.com/watch?v={r['videoId']}"} for r in response]
 
         return response
-
-
-client = YoutubeClient()
-# client.upload_video(file_path="upload_test_video.mp4", title="aaaaaaaaaaaa")
-pprint(client.list_videos())
