@@ -1,12 +1,16 @@
 import re
 import json
 import urllib.request
+import threading
 from tqdm.auto import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
 import argparse
 import string
 from utils import extract_video_id
+
+MIN_THREADS = 64
+MAX_THREADS = 1024
 
 def get_video_info(video_id):
     video_url = f"https://www.youtube.com/watch?v={video_id}"
@@ -35,6 +39,16 @@ def extract_video_url(video_info, preferred_quality=None, format_string=None):
             ):
                 video_url = format["url"]
                 break
+        if video_url == None:
+            print("Format string set but not found, proceeding without it.")
+
+    if not video_url and preferred_quality is not None:
+        for format in all_formats:
+            if(format.get("height") == preferred_quality):
+                video_url = format["url"]
+                break
+        if video_url == None:
+            print("Quality not found, proceeding without it.")
 
     if not video_url:
         for format in all_formats:
@@ -43,8 +57,10 @@ def extract_video_url(video_info, preferred_quality=None, format_string=None):
                 break
 
     if not video_url:
+        print("Could not find video URL")
         raise Exception("Could not find video URL")
-
+    
+    print("Downloading video with quality: " + str(format.get("height")) + "\nFormat: " + format["mimeType"] )
     return video_url
 
 
@@ -71,13 +87,35 @@ def download_chunk(url, start_byte, end_byte, chunk_index):
         return chunk_index, chunk_data
 
 
-def download_video_parallel(video_url, file_name, num_threads=4):
+def download_chunk_modified(url, start_byte, end_byte, chunk_index, progress_bar, progress_lock):
+    req = urllib.request.Request(url)
+    req.headers["Range"] = f"bytes={start_byte}-{end_byte}"
+
+    with urllib.request.urlopen(req) as response:
+        chunk_data = response.read()
+
+    with progress_lock:
+        progress_bar.update(len(chunk_data))
+
+    return chunk_index, chunk_data
+
+def download_video_parallel(video_url, file_name, num_threads=None):
     req = urllib.request.Request(video_url, method="HEAD")
     with urllib.request.urlopen(req) as response:
         file_size = int(response.getheader("Content-Length"))
 
+    if num_threads is None:
+        num_threads = min(max(file_size // (1 * 1024**2), MIN_THREADS), MAX_THREADS)
+    print("Number of threads used: " + str(num_threads))
+
     chunk_size = file_size // num_threads
     futures = []
+
+    # Create a progress bar
+    progress_bar = tqdm(total=file_size, unit="B", unit_scale=True, desc="Downloading")
+
+    # Create a lock for updating the progress bar
+    progress_lock = threading.Lock()
 
     with ThreadPoolExecutor(max_workers=num_threads) as executor:
         for i in range(num_threads):
@@ -86,26 +124,18 @@ def download_video_parallel(video_url, file_name, num_threads=4):
                 (i + 1) * chunk_size - 1 if i != num_threads - 1 else file_size - 1
             )
             futures.append(
-                executor.submit(download_chunk, video_url, start_byte, end_byte, i)
+                executor.submit(
+                    download_chunk_modified, video_url, start_byte, end_byte, i, progress_bar, progress_lock
+                )
             )
-
-        # Create a progress bar
-        progress_bar = tqdm(
-            total=file_size, unit="B", unit_scale=True, desc="Downloading"
-        )
 
     with open(file_name, "wb") as out_file:
         for future in as_completed(futures):
             chunk_index, chunk_data = future.result()
             out_file.seek(chunk_index * chunk_size)
             out_file.write(chunk_data)
-            # print(f"Downloaded chunk {chunk_index + 1} of {num_threads}")
-
-            # Update the progress bar with the size of the downloaded chunk
-            progress_bar.update(len(chunk_data))
 
     progress_bar.close()
-
 
 
 def list_formats(video_info):
@@ -152,7 +182,7 @@ def main():
     parser.add_argument(
         "--threads",
         type=int,
-        default=64,
+        #default=64,
         help="Number of threads to use (default: 64). Example: --threads 32",
     )
     parser.add_argument(
@@ -183,7 +213,6 @@ def main():
         video_url = extract_video_url(
             video_info, preferred_quality=args.quality, format_string=args.format_str
         )
-        print(video_url)
         file_name = sanitize_file_name(f"{video_title}.mp4")
         download_video_parallel(video_url, file_name, num_threads=args.threads)
         print(f"Downloaded '{video_title}' as '{file_name}'")

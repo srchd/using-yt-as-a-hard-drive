@@ -1,18 +1,18 @@
 # Scripts for downloading youtube videos
-## USECASE 0 (ytdlp):
->> python download_ytdlp.py -url- <br />
-## USECASE 1:
-List out the available formats for video in -url-:
->> python download_urllib.py https://www.youtube.com/watch?v=OTVE5iPMKLg&ab_channel=CGPGrey --formats <br />
-Out: <br />
-format_str - quality_lable - height <br />
-FORMATS: <br />
-video/mp4; codecs="avc1.42001E, mp4a.40.2" - 360p - 360p <br />
-video/mp4; codecs="avc1.64001F, mp4a.40.2" - 720p - 720p <br />
+## USECASE - download_ytdlp
+Download using a 3rd party library made by (possibly) professionals. <br />
 
+#### List out available video formats (--formats argument):
+>> python download_ytdlp.py "https://www.youtube.com/watch?v=qo_fUjb02ns" --formats <br />
+#### Download best merged video (video+audio) (no arguments):
+>> python download_ytdlp.py "https://www.youtube.com/watch?v=qo_fUjb02ns" <br />
+#### Download with specific ID from available fromats list (--format_id id):
+>> python download_ytdlp.py "https://www.youtube.com/watch?v=qo_fUjb02ns" --format_id 400 <br />
 
-## USECASE 2:
-Download youtube video with a specified format: <br />
->> python download_urllib.py <url> --format_str <> --quality <> <br />
->> python download_urllib.py "https://www.youtube.com/watch?v=OTVE5iPMKLg&ab_channel=CGPGrey" --format_str "video/mp4;\ codecs=\"avc1.42001E,\ mp4a.40.2\"" --quality 360 <br />
->> python download_urllib.py "https://www.youtube.com/watch?v=OTVE5iPMKLg&ab_channel=CGPGrey" --format_str "video/mp4;\ codecs=\"avc1.64001F,\ mp4a.40.2\"" --quality 720 <br />
+## USECASE - download_urllib
+Download using hand-made code using urllib <br />
+
+#### List out available video formats (--formats argument):
+>> python download_urllib.py "https://www.youtube.com/watch?v=qo_fUjb02ns" --formats <br />
+#### Download video with specified format AND/OR quality (--format_str s and --quality q arguments):
+>> python download_urllib.py "https://www.youtube.com/watch?v=qo_fUjb02ns" --quality 1440 --format_str "video/webm" <br />
