@@ -1,8 +1,8 @@
 # Credential files
-src/youtube_client/credentials/credentials.json
-src/youtube_client/credentials/user_file.json
+src/youtube/credentials/credentials.json
+src/youtube/credentials/user_file.json
 
-src/youtube_client/upload_test_video.mp4
+src/youtube/upload_test_video.mp4
 
 '
 .idea
