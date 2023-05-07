@@ -15,10 +15,8 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
 from oauth2client.tools import argparser, run_flow
 
-from .youtube_client_parameters import ApiParameters
-from .youtube_client_parameters import YTHDSettings
-from .youtube_client_parameters import Credentials
-from .youtube_client_parameters import Path as Path
+from .youtube_client_parameters import ApiParameters, YTHDSettings, Path
+from .credentials import Credentials
 
 
 class YoutubeClient:
@@ -27,6 +25,7 @@ class YoutubeClient:
         self.logger.setLevel(logging.DEBUG)
         self.logger.addHandler(logging.StreamHandler())
 
+        self.credentials = Credentials()
         self.client = self.get_build()
 
     @staticmethod
@@ -43,16 +42,13 @@ class YoutubeClient:
 
         while retry:
             try:
-                credentials = google.oauth2.credentials.Credentials.from_authorized_user_file(Credentials.GENERATED_CLIENT_SECRETS_FILE)
+                credentials = self.credentials.get_generated_file()
                 client = build(ApiParameters.API_SERVICE_NAME, ApiParameters.API_VERSION, credentials=credentials)
                 YoutubeClient.__test_client(client)
             except Exception:
                 self.logger.info("Creating credentials")
-                flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(Credentials.ORIGINAL_CLIENT_SECRETS_FILE, ApiParameters.SCOPES)
-                credentials = flow.run_local_server(port=8090)
-                with open(Credentials.GENERATED_CLIENT_SECRETS_FILE, "w") as f:
-                    f.write(credentials.to_json())
-            finally:
+                credentials = self.credentials.create_credentials()
+            else:
                 retry = False
 
         if client is None:

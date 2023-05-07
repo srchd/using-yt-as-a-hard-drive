@@ -34,10 +34,6 @@ class YTHDSettings:
 	YTHD_MARK = "#ythd"
 	DELETED_MARK = "#deleted"
 
-class Credentials:
-	ORIGINAL_CLIENT_SECRETS_FILE = "youtube/credentials/credentials.json"
-	GENERATED_CLIENT_SECRETS_FILE = "youtube/credentials/user_file.json"
-
 class Path:
 	def __init__(self, name, parent=None):
 		self.name = name
