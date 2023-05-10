@@ -10,16 +10,14 @@ class View(tk.Toplevel):
         self.height = "720"
         self.geometry(self.get_window_size())
 
-        self.url_entry = tk.Entry(self, width=64)
-        self.url_entry.insert(0, 'https://www.youtube.com/watch?v=dQw4w9WgXcQ')
-        self.submit_url_button = tk.Button(self, text='Submit URL', width=8)
-
-        self.current_url_label = tk.Label(self, text='Current URL: ')
-        self.download_url_label = tk.Label(self)
-
-        self.download_video_button = tk.Button(self, text='Download Video')
-
-        self.download_video_success = tk.Label(self)
+        """
+        YouTube Client stuff from here
+        """
+        self.selecting_file_label = tk.Label(self)
+        self.selecting_file_entry = tk.Entry(self)
+        self.browse_file_button = tk.Button(self, text='Browse Files')
+        self.upload_file_button = tk.Button(self, text='Upload video')
+        self.videos_listbox = tk.Listbox(self)
         
         return
     
@@ -28,7 +26,7 @@ class View(tk.Toplevel):
 
     def grid_widgets(self, widgets : list[tk.Widget]) -> None:
         for i, widget in enumerate(widgets):
-            widget.grid(row=self.row_count, column=i)
+            widget.grid(row=self.row_count, column=i, padx=(50, 50))
         self.row_count += 1
 
         return
