@@ -15,7 +15,7 @@ class Model:
         self.upload_selected_filename = Observable('No File Selected!')
         self.upload_selected_filepath = Observable('')
         self.videos_on_yt = Observable(['No videos found!'])
-        self.is_videos_on_yt = Observable(False)
+        self.is_video_uploaded = Observable(False)
 
         return
 
@@ -49,12 +49,16 @@ class Model:
         
         return
     
+    def reset_is_video_uploaded(self):
+        self.is_video_uploaded.set_without_callback(False)
+    
     def list_videos(self):
         videos = self.__youtube_client.list_videos(list_deleted=False, list_only_ythd=True)
         self.videos_on_yt.set(videos if videos else self.videos_on_yt.get())
 
         return
     def upload_video(self):
-        self.__youtube_client.upload_video(self.upload_selected_filepath, "Some title", "Some description")
+        self.__youtube_client.upload_video(self.upload_selected_filepath.get(), "Some title", "Some description")
+        self.is_video_uploaded.set(True)
 
         return

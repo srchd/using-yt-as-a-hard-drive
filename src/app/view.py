@@ -18,6 +18,7 @@ class View(tk.Toplevel):
         self.browse_file_button = tk.Button(self, text='Browse Files')
         self.upload_file_button = tk.Button(self, text='Upload video')
         self.videos_listbox = tk.Listbox(self)
+        self.video_uploaded_label = tk.Label(self)
         
         return
     

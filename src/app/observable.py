@@ -29,6 +29,9 @@ class Observable:
 
         return
 
+    def set_without_callback(self, data) -> None:
+        self.data = data
+
     def get(self) -> Any:
         return self.data
     
