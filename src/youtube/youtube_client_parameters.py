@@ -34,6 +34,8 @@ class YTHDSettings:
 	YTHD_MARK = "#ythd"
 	DELETED_MARK = "#deleted"
 
+	LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
 class Path:
 	def __init__(self, name, parent=None):
 		self.name = name
