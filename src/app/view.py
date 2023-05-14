@@ -6,19 +6,45 @@ class View(tk.Toplevel):
         self.protocol('WM_DELETE_WINDOW', self.master.destroy)
         self.row_count = 0
         
-        self.width = "720"
-        self.height = "720"
+        self.width = "600"
+        self.height = "400"
         self.geometry(self.get_window_size())
 
         """
         YouTube Client stuff from here
         """
-        self.selecting_file_label = tk.Label(self)
-        self.selecting_file_entry = tk.Entry(self)
-        self.browse_file_button = tk.Button(self, text='Browse Files')
-        self.upload_file_button = tk.Button(self, text='Upload video')
-        self.videos_listbox = tk.Listbox(self)
-        self.video_uploaded_label = tk.Label(self)
+
+        # File selector Frame
+        self.file_selector_frame = tk.Frame(self)
+
+        self.selecting_file_label = tk.Label(self.file_selector_frame, padx=20, text='Select a file:')
+        self.selecting_file_entry = tk.Entry(self.file_selector_frame, width=50)
+        self.browse_file_button = tk.Button(self.file_selector_frame, padx=20, text='Browse Files')
+
+        self.selecting_file_label.pack(side=tk.LEFT)
+        self.selecting_file_entry.pack(side=tk.LEFT)
+        self.browse_file_button.pack(side=tk.RIGHT)
+
+        # Upload video Frame
+        self.upload_video_frame = tk.Frame(self, pady=20)
+
+        self.upload_file_button = tk.Button(self.upload_video_frame, width=30, text='Upload video')
+
+        self.upload_file_button.pack()
+
+        # Videos Listbox Frame
+        self.videos_listbox_frame = tk.Frame(self)
+
+        self.videos_listbox = tk.Listbox(self.videos_listbox_frame, height=15, width=90)
+
+        self.videos_listbox.pack()
+
+        # Video upload/download feedback Frame
+        self.video_upload_download_feedback_frame = tk.Frame(self)
+
+        self.video_upload_download_feedback_label = tk.Label(self.video_upload_download_feedback_frame, padx=10)
+
+        self.video_upload_download_feedback_label.pack(side='right')
         
         return
     
