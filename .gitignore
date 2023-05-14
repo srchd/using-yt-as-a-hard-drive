@@ -1,6 +1,6 @@
 # Credential files
-src/youtube/credentials/credentials.json
-src/youtube/credentials/generated/user_file.json
+src/youtube/credentials/*/*.json
+src/youtube/credentials/*.json
 
 src/youtube/upload_test_video.mp4
 
