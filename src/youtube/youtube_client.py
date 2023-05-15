@@ -46,7 +46,7 @@ class YoutubeClient:
         return ex.status_code == 403 and ex.error_details and "domain" in ex.error_details[0] and ex.error_details[0]["domain"] == "youtube.quota" and "reason" in ex.error_details[0] and ex.error_details[0]["reason"] == "quotaExceeded"
 
     def get_build(self):
-        credentials = self.credentials.get_generated_file()
+        credentials = self.credentials.get_current_credentials()
         client = build(ApiParameters.API_SERVICE_NAME, ApiParameters.API_VERSION, credentials=credentials)
         YoutubeClient.__test_client(client)
         return client
