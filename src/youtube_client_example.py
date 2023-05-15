@@ -26,18 +26,19 @@ logger.info(f"Created path: {video_path}")
 # Upload a video
 # I commented it out because due to API limits you can only upload ~6 videos per day. Working on a solution right now
 file_location = "youtube/upload_test_video.mp4"
-youtube_client.upload_video(file_location, "Some title", "some description", privacy_status="unlisted", path=video_path)
+# youtube_client.upload_video(file_location, "Some title", "some description", privacy_status="unlisted", path=video_path)
 
-logger.info(pformat(youtube_client.list_videos(list_deleted=False, list_only_ythd=True)))
+# logger.info(pformat(youtube_client.list_videos(list_deleted=False, list_only_ythd=True)))
 # As you can see, the path and the #ythd text gets added to the description
 # We can store any information we want about the videos this way
 # For example the YouTube Data API doesn't support deleting videos, however we can simply mark them #deleted and ignore them during querying
 
+'''
 try:
     youtube_client.mark_video_deleted("<put video id here>")
 except Exception:
     logger.info("video doesn't exists")
-
+'''
 
 
 
