@@ -166,7 +166,8 @@ class Credentials:
 		return copied_files_dict, max_file_index
 
 	def __generate_credentials(self, copied_files_dict: dict):
-		possible_generated_files_dict = {f.replace(self.data_storage.COPIED_CREDENTIALS_SELECTOR, self.data_storage.GENERATED_CREDENTIALS_SELECTOR): f for f in copied_files_dict.keys()}
+		copied_files_keys = sorted(copied_files_dict.keys(), key=lambda p: self.data_storage.get_index_from_file_name(self.data_storage.get_file_name_from_path(p)))
+		possible_generated_files_dict = {f.replace(self.data_storage.COPIED_CREDENTIALS_SELECTOR, self.data_storage.GENERATED_CREDENTIALS_SELECTOR): f for f in copied_files_keys}
 		count = 0
 		credential_indices = []
 		for path in possible_generated_files_dict.keys():
