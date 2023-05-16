@@ -2,9 +2,6 @@ from __future__ import annotations
 import http.client
 import httplib2
 from typing import Union
-import os
-
-dirname = os.path.dirname(os.path.abspath(__file__))
 
 class ApiParameters:
 	SCOPES = [
