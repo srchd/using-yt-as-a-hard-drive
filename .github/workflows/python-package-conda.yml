@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build-linux:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     strategy:
       max-parallel: 5
 
@@ -19,12 +19,14 @@ jobs:
     
     - name: Install dependencies
       run: |
-        # $CONDA is an environment variable pointing to the root of the miniconda directory
-        $CONDA/bin/conda env update --file envs/Windows.yml --name base
+        C:\Miniconda\condabin\conda.bat env update --file envs/Windows.yml --name base
+        C:\Miniconda\condabin\conda.bat init powershell
     
     - name: Lint with flake8
       run: |
-        conda install flake8
+        # Activate the base environment
+        C:\Miniconda\condabin\conda.bat activate base
+        C:\Miniconda\condabin\conda.bat install flake8
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
@@ -32,5 +34,7 @@ jobs:
         
     - name: Test with pytest
       run: |
-        conda install pytest
+        # Activate the base environment
+        C:\Miniconda\condabin\conda.bat activate base
+        C:\Miniconda\condabin\conda.bat install pytest
         pytest
