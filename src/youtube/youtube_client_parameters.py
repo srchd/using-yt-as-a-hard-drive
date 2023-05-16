@@ -3,6 +3,7 @@ import http.client
 import httplib2
 from typing import Union
 
+
 class ApiParameters:
 	SCOPES = [
 		"https://www.googleapis.com/auth/youtube",
