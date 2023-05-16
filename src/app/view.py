@@ -4,6 +4,7 @@ class View(tk.Toplevel):
     def __init__(self, master) -> None:
         tk.Toplevel.__init__(self, master)
         self.protocol('WM_DELETE_WINDOW', self.master.destroy)
+        self.title("Using YouTube as a Hard Drive #YTHD")
         self.row_count = 0
         
         self.width = "600"

@@ -11,3 +11,6 @@ class YouTubeVideo:
         self.path = response_dict['path']
 
         return
+    
+    def __str__(self) -> str:
+        return f'Video ID: {self.videoId}\nPublished At:{self.publishedAt}\nTitle: {self.title}\nDesc: {self.description}\nPublish time:{self.publishTime}\nURL: {self.url}\nPath: {self.path}'

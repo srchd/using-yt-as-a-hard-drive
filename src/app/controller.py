@@ -1,5 +1,6 @@
 from model import Model
 from view import View
+from subwindows.upload_window import UploadWindow
 from tkinter import filedialog
 from tkinter import END, TOP
 
@@ -40,6 +41,10 @@ class Controller:
         return
     
     def on_upload_video(self) -> None:
+        upload_window = UploadWindow(self.view)
+        upload_window.grab_set()
+        self.view.wait_window(upload_window)
+
         self.model.upload_video()
         self.model.list_videos()
 
@@ -69,5 +74,5 @@ class Controller:
     def update_videos_listbox_callback(self, data) -> None:
         self.view.videos_listbox.delete(0, END)
         for video in data:
-            # print(video)
+            print(video)
             self.view.videos_listbox.insert(END, video.title)

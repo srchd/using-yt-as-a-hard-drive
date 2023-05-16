@@ -5,7 +5,7 @@ from youtube.youtube_client import YoutubeClient
 
 
 class Model:
-    __youtube_client = YoutubeClient()
+    __youtube_client = None  # YoutubeClient()
 
     def __init__(self) -> None:
         self.download_url = Observable('')
@@ -52,8 +52,8 @@ class Model:
         self.is_video_uploaded.set_without_callback(False)
     
     def list_videos(self):
-        videos = self.__youtube_client.list_videos(list_deleted=False, list_only_ythd=True)
-        # videos = self.videos
+        # videos = self.__youtube_client.list_videos(list_deleted=False, list_only_ythd=True)
+        videos = self.videos
         yt_videos : list
         if videos:
             yt_videos = [YouTubeVideo(video) for video in videos]
@@ -63,9 +63,18 @@ class Model:
         self.videos_on_yt.set(yt_videos)
 
         return
+
     def upload_video(self):
         self.is_video_uploaded.set(True)
-        self.videos.append(self.get_selected_upload_filename())
+        self.videos.append({
+             'videoId': 'null',
+             'publishedAt': 'JUST NOW',
+             'title': self.get_selected_upload_filename(),
+             'description': '#ythd TEST',
+             'publishTime': 'WHEN i SAID',
+             'url': 'https://google.com',
+             'path': self.get_selected_upload_filepath()
+        })
         # self.__youtube_client.upload_video(self.upload_selected_filepath.get(), "Some title", "Some description")
         # self.is_video_uploaded.set(True)
 
