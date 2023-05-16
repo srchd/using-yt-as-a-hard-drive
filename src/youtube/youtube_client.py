@@ -16,8 +16,8 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
 from oauth2client.tools import argparser, run_flow
 
-from .youtube_client_parameters import ApiParameters, YTHDSettings, Path
-from .credentials import Credentials
+from youtube_client_parameters import ApiParameters, YTHDSettings, Path
+from credentials import Credentials
 
 
 class YoutubeClient:

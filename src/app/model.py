@@ -1,4 +1,4 @@
-from .observable import Observable
+from datatypes.observable import Observable
 from download.download_ytdlp import download_video_with_yt_dlp
 from youtube.youtube_client import YoutubeClient
 

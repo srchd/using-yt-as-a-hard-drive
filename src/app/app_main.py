@@ -1,5 +1,5 @@
 import tkinter as tk
-from .controller import Controller
+from controller import Controller
 
 def run() -> None:
     root = tk.Tk()

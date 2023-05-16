@@ -1,5 +1,5 @@
-from .model import Model
-from .view import View
+from model import Model
+from view import View
 from tkinter import filedialog
 from tkinter import END, TOP
 
