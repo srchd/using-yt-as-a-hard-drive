@@ -12,15 +12,15 @@ jobs:
     - name: checkout repo
       uses: actions/checkout@v3
     
-    - uses: conda-incubator/setup-miniconda@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
       with:
-        activate-environment: ythd
-        python-version: "3.9"
-        environment-file: envs/Windows.yml
-        auto-activate-base: false
-    - run: |
-        conda info
-        conda list
+        python-version: 3.9
+    
+    - name: Install dependencies
+      run: |
+        # $CONDA is an environment variable pointing to the root of the miniconda directory
+        $CONDA/bin/conda env update --file envs/Windows.yml --name base
     
     - name: Lint with flake8
       run: |
