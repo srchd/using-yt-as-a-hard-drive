@@ -70,4 +70,4 @@ class Controller:
         self.view.videos_listbox.delete(0, END)
         for video in data:
             # print(video)
-            self.view.videos_listbox.insert(END, video)
+            self.view.videos_listbox.insert(END, video.title)

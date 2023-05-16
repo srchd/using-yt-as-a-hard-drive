@@ -3,19 +3,16 @@ from datatypes.yt_video import YouTubeVideo
 from download.download_ytdlp import download_video_with_yt_dlp
 from youtube.youtube_client import YoutubeClient
 
-import validators
-import os
-# from download.example_urllib import download_video, download_video_parallel
 
 class Model:
-    __youtube_client = None  # YoutubeClient()
+    __youtube_client = YoutubeClient()
 
     def __init__(self) -> None:
         self.download_url = Observable('')
         self.download_video_success = Observable(0)
         self.upload_selected_filename = Observable('No File Selected!')
         self.upload_selected_filepath = Observable('')
-        self.videos_on_yt = Observable([])
+        self.videos_on_yt = Observable(list())
         self.is_video_uploaded = Observable(False)
 
         """
@@ -55,9 +52,15 @@ class Model:
         self.is_video_uploaded.set_without_callback(False)
     
     def list_videos(self):
-        # videos = self.__youtube_client.list_videos(list_deleted=False, list_only_ythd=True)
-        videos = self.videos
-        self.videos_on_yt.set(videos if videos else self.videos_on_yt.get())
+        videos = self.__youtube_client.list_videos(list_deleted=False, list_only_ythd=True)
+        # videos = self.videos
+        yt_videos : list
+        if videos:
+            yt_videos = [YouTubeVideo(video) for video in videos]
+        else:
+            yt_videos = self.videos_on_yt.get()
+
+        self.videos_on_yt.set(yt_videos)
 
         return
     def upload_video(self):
