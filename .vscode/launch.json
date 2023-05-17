@@ -11,6 +11,13 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": true
+        },
+        {
+            "name": "YTHD: App",
+            "type": "python",
+            "request": "launch",
+            "program": "src/main.py",
+            "console": "integratedTerminal"
         }
         // Need to add a custom configuration when we have the scripts
         // We can have vustom configuration for:
