@@ -11,15 +11,24 @@ class UploadWindow(tk.Toplevel):
 
         self.geometry(self.get_window_size())
 
-        self.test_label = tk.Label(self, text='TEST')
-        self.test_label.pack()
+        self.title_var = tk.StringVar(parent, value='Some title')
+        self.description_var = tk.StringVar(parent, value='Some description')
 
-        self.test_button = tk.Button(self, text='Get Window Dimensions', command=self.__print_window_size)
-        self.test_button.pack()
+        self.title_label = tk.Label(self, text='Title')
+        self.description_label = tk.Label(self, text='Description')
+
+        self.title_entry = tk.Entry(self, textvariable=self.title_var)
+        self.description_entry = tk.Entry(self, textvariable=self.description_var)
+
+        self.title_label.pack()
+        self.title_entry.pack()
+
+        self.description_label.pack()
+        self.description_entry.pack()
+
+        self.submit_button = tk.Button(self, text='OK', command=self.destroy)
+        self.submit_button.pack()
         return
     
     def get_window_size(self) -> str:
         return "{0}x{1}".format(self.width, self.height)
-    
-    def __print_window_size(self) -> None:
-        print(f'{self.winfo_width()} x {self.winfo_height()}')

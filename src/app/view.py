@@ -5,7 +5,6 @@ class View(tk.Toplevel):
         tk.Toplevel.__init__(self, master)
         self.protocol('WM_DELETE_WINDOW', self.master.destroy)
         self.title("Using YouTube as a Hard Drive #YTHD")
-        self.row_count = 0
         
         self.width = "600"
         self.height = "400"
@@ -46,15 +45,15 @@ class View(tk.Toplevel):
         self.video_upload_download_feedback_label = tk.Label(self.video_upload_download_feedback_frame, padx=10)
 
         self.video_upload_download_feedback_label.pack(side='right')
+
+        # Download video Frame
+        self.download_video_frame = tk.Frame(self)
+
+        self.download_video_button = tk.Button(self.download_video_frame, width=30, text='Download Video')
+
+        self.download_video_button.pack()
         
         return
     
     def get_window_size(self) -> str:
         return "{0}x{1}".format(self.width, self.height)
-
-    def grid_widgets(self, widgets : list[tk.Widget]) -> None:
-        for i, widget in enumerate(widgets):
-            widget.grid(row=self.row_count, column=i, padx=(50, 50))
-        self.row_count += 1
-
-        return
