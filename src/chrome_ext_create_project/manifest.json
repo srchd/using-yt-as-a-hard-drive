@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Auto Youtube Data V3",
+  "version": "1.0",
+  "description": "Setup Youtube Data V3 Project with one click. ",
+  "action": {
+    "default_title": "Auto Youtube Data V3",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "tabs", "activeTab"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+        "matches": ["<all_urls>"],
+        "js": ["content.js"]
+    }
+    ]
+}
