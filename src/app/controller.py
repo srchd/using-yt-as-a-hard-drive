@@ -52,8 +52,7 @@ class Controller:
         self.view.video_upload_download_feedback_label.config(text='')
 
     def on_browse_files(self) -> None:
-        filepath = filedialog.askopenfilename(initialdir='./', title='Select a file', filetypes=(('MP4 Video Formats', '*.mp4*'),
-                                                                                                ('all_files','*.*')))
+        filepath = filedialog.askopenfilename(initialdir='./', title='Select a file')
 
         self.reset_feedback_label()
         self.model.set_selected_upload_file(filepath)
