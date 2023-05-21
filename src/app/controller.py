@@ -14,7 +14,7 @@ class Controller:
         """
         self.model.upload_selected_filepath.add_callback_function(self.set_upload_file_callback)
         self.model.videos_on_yt.add_callback_function(self.update_videos_listbox_callback)
-        self.model.is_video_uploaded.add_callback_function(self.video_uploaded_callback)
+        self.model.is_video_uploaded.add_callback_function(self.file_uploaded_callback)
         self.model.is_video_downloaded.add_callback_function(self.video_downloaded_callback)
         
         # File selector Frame
@@ -22,8 +22,8 @@ class Controller:
         self.view.browse_file_button.config(command=self.on_browse_files)
 
         # Upload file Frame
-        self.view.upload_video_frame.pack()
-        self.view.upload_file_button.config(command=self.on_upload_video, state='disabled')
+        self.view.upload_file_frame.pack()
+        self.view.upload_file_button.config(command=self.on_upload_file, state='disabled')
 
         # Path frame
         self.view.path_frame.pack()
@@ -39,8 +39,8 @@ class Controller:
         self.view.video_upload_download_feedback_frame.pack(fill='both')
 
         # Download Video Frame
-        self.view.download_video_frame.pack()
-        self.view.download_video_button.config(command=self.on_download_from_listbox, state='disabled')
+        self.view.download_file_frame.pack()
+        self.view.download_file_button.config(command=self.on_download_from_listbox, state='disabled')
 
         self.selected_video = None
 
@@ -86,11 +86,11 @@ class Controller:
         try:
             self.selected_video = self.view.videos_listbox.get(self.view.videos_listbox.curselection())
             print(self.selected_video)
-            self.view.download_video_button.config(state='normal')
+            self.view.download_file_button.config(state='normal')
             self.reset_feedback_label()
         except:
             print('No videos for you!')
-            self.view.download_video_button.config(state='disabled')
+            self.view.download_file_button.config(state='disabled')
 
     def set_upload_file_callback(self, data) -> None:
         self.view.selecting_file_entry.delete(0, END)
@@ -102,7 +102,7 @@ class Controller:
 
         return
     
-    def video_uploaded_callback(self, data) -> None:
+    def file_uploaded_callback(self, data) -> None:
         new_text = "Upload "
         if data:
             new_text += 'SUCCESSFUL'

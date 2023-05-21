@@ -25,10 +25,10 @@ class View(tk.Toplevel):
         self.selecting_file_entry.pack(side=tk.LEFT)
         self.browse_file_button.pack(side=tk.RIGHT)
 
-        # Upload video Frame
-        self.upload_video_frame = tk.Frame(self, pady=20)
+        # Upload file Frame
+        self.upload_file_frame = tk.Frame(self, pady=20)
 
-        self.upload_file_button = tk.Button(self.upload_video_frame, width=30, text='Upload video')
+        self.upload_file_button = tk.Button(self.upload_file_frame, width=30, text='Upload video')
 
         self.upload_file_button.pack()
 
@@ -56,12 +56,12 @@ class View(tk.Toplevel):
 
         self.video_upload_download_feedback_label.pack(side='right')
 
-        # Download video Frame
-        self.download_video_frame = tk.Frame(self)
+        # Download file Frame
+        self.download_file_frame = tk.Frame(self)
 
-        self.download_video_button = tk.Button(self.download_video_frame, width=30, text='Download Video')
+        self.download_file_button = tk.Button(self.download_file_frame, width=30, text='Download Video')
 
-        self.download_video_button.pack()
+        self.download_file_button.pack()
         
         return
     

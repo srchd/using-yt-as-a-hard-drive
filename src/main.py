@@ -10,6 +10,9 @@ sys.path.append(src_path)
 sys.path.append(os.path.join(src_path, 'app'))
 sys.path.append(os.path.join(src_path, 'youtube'))
 
+if not os.path.isdir(os.path.join(repo_path, 'logs')):
+    os.mkdir(os.path.join(repo_path, 'logs'))
+
 from app.app_main import run
 
 run()
