@@ -28,7 +28,7 @@ class View(tk.Toplevel):
         # Upload file Frame
         self.upload_file_frame = tk.Frame(self, pady=20)
 
-        self.upload_file_button = tk.Button(self.upload_file_frame, width=30, text='Upload video')
+        self.upload_file_button = tk.Button(self.upload_file_frame, width=30, text='Upload File')
 
         self.upload_file_button.pack()
 
@@ -59,7 +59,7 @@ class View(tk.Toplevel):
         # Download file Frame
         self.download_file_frame = tk.Frame(self)
 
-        self.download_file_button = tk.Button(self.download_file_frame, width=30, text='Download Video')
+        self.download_file_button = tk.Button(self.download_file_frame, width=30, text='Download File')
 
         self.download_file_button.pack()
         
