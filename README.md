@@ -5,7 +5,7 @@ Prerequisites
 -------------
 
  - A google account
- - Anaconda with `python>=3.9`
+ - Anaconda with `python>=3.9` [Download here](https://www.anaconda.com/download)
  - Internet connection
 
 Getting your credentials
