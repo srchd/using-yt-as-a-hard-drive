@@ -1,6 +1,11 @@
 Using YouTube as a hard drive.
 ==============================
 
+About
+-----
+
+YTHD (or Using YouTube as a Hard Drive) is an app, which lets you to upload almost any files to the video sharing platform, and store it there, without losing any kind of information. You don't have to worry about some stealing your precious data, as every encoded file (video) are unlisted, which means that only the people, who have the link can access it.
+
 Prerequisites
 -------------
 
