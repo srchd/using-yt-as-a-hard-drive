@@ -8,7 +8,7 @@ from logger.logger import log, logger
 
 class Model:
     # Set this variable to `None` when testing, so won't exceed the quota.
-    __youtube_client = None  # YoutubeClient()
+    __youtube_client = YoutubeClient()
 
     def __init__(self) -> None:
         self.download_video_success = Observable(0)
@@ -22,7 +22,7 @@ class Model:
         """
         TESTING
         """
-        self.videos = []
+        # self.videos = []
 
         return
 
@@ -74,10 +74,10 @@ class Model:
     @log
     def list_videos(self):
         logger.info('Listing videos')
-        # videos = self.__youtube_client.list_videos(list_deleted=False, list_only_ythd=True)
+        videos = self.__youtube_client.list_videos(list_deleted=False, list_only_ythd=True)
         # ======================================================
         # The line below only for testing, so won't exceed the quota
-        videos = self.videos
+        # videos = self.videos
         # ======================================================
         yt_videos : list
         if videos:
@@ -98,17 +98,17 @@ class Model:
         self.is_video_uploaded.set(False)
         # ======================================================
         # The lines below are only for testing, so won't exceed the quota
-        self.videos.append({
-            'videoId': 'null',
-            'publishedAt': 'JUST NOW',
-            'title': title,
-            'description': description,
-            'publishTime': 'WHEN i SAID',
-            'url': 'https://google.com',
-            'path': self.get_selected_upload_filepath()
-        })
+        # self.videos.append({
+        #     'videoId': 'null',
+        #     'publishedAt': 'JUST NOW',
+        #     'title': title,
+        #     'description': description,
+        #     'publishTime': 'WHEN i SAID',
+        #     'url': 'https://google.com',
+        #     'path': self.get_selected_upload_filepath()
+        # })
         # ======================================================
-        # self.__youtube_client.upload_video(self.upload_selected_filepath.get(), title=title, description=description, path=Path(path))
+        self.__youtube_client.upload_video(self.upload_selected_filepath.get(), title=title, description=description, path=Path(path))
         self.is_video_uploaded.set(True)
 
         logger.info('Video Uplaoded')
