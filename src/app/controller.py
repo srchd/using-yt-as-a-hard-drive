@@ -58,7 +58,7 @@ class Controller:
         self.model.set_selected_upload_file(filepath)
         return
     
-    def on_upload_video(self) -> None:
+    def on_upload_file(self) -> None:
         file_path = self.model.upload_selected_filepath.get()
         if not file_path:
             file_path = ""
