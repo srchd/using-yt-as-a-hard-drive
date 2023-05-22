@@ -2,6 +2,7 @@ from datatypes.observable import Observable
 from datatypes.yt_video import YouTubeVideo
 from download.download_ytdlp import download_video_with_yt_dlp
 from youtube.youtube_client import YoutubeClient
+from youtube import Path
 
 
 class Model:
@@ -15,6 +16,7 @@ class Model:
         self.videos_on_yt = Observable(list())
         self.is_video_uploaded = Observable(False)
         self.is_video_downloaded = Observable(False)
+        self.current_path = Observable("/")
 
         """
         TESTING
@@ -22,6 +24,14 @@ class Model:
         # self.videos = []
 
         return
+
+    def get_current_path(self):
+        return self.current_path.get()
+
+    def set_current_path(self, path: str):
+        if not path:
+            path = "/"
+        self.current_path.set(path)
 
     def download_video(self, video_idx : int) -> None:
         try:
@@ -74,7 +84,7 @@ class Model:
 
         return
 
-    def upload_video(self, title, description):
+    def upload_video(self, title, description, path):
 
         # ======================================================
         # The lines below are only for testing, so won't exceed the quota
@@ -89,7 +99,7 @@ class Model:
         #      'path': self.get_selected_upload_filepath()
         # })
         # ======================================================
-        self.__youtube_client.upload_video(self.upload_selected_filepath.get(), title=title, description=description)
+        self.__youtube_client.upload_video(self.upload_selected_filepath.get(), title=title, description=description, path=Path(path))
         self.is_video_uploaded.set(True)
 
         return

@@ -8,7 +8,7 @@ class YouTubeVideo:
         self.description = response_dict['description']
         self.publishTime = response_dict['publishTime']
         self.url = response_dict['url']
-        self.path = response_dict['path']
+        self.path = str(response_dict['path'])
 
         return
     
