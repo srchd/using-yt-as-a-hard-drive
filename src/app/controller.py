@@ -25,6 +25,11 @@ class Controller:
         self.view.upload_video_frame.pack()
         self.view.upload_file_button.config(command=self.on_upload_video, state='disabled')
 
+        # Path frame
+        self.view.path_frame.pack()
+        self.view.current_path_entry.insert(0, self.model.get_current_path())
+        self.view.current_path_entry.bind('<Return>', self.save_new_path)
+
         # Videos Listbox Frame
         self.view.videos_listbox_frame.pack()
         self.view.videos_listbox.bind('<<ListboxSelect>>', lambda _: self.on_listbox_select_change())
@@ -55,15 +60,19 @@ class Controller:
         return
     
     def on_upload_video(self) -> None:
-        upload_window = UploadWindow(self.view)
+        file_path = self.model.upload_selected_filepath.get()
+        if not file_path:
+            file_path = ""
+        upload_window = UploadWindow(self.view, file_path)
         upload_window.grab_set()  # Grabbing the UploadWindow, so user can't interact with the Main while this is open
 
         self.view.wait_window(upload_window)  # Waiting for the UploadWindow to be closed
 
         title = upload_window.title_var.get()
         description = upload_window.description_var.get()
+        path = upload_window.path_var.get()
 
-        self.model.upload_video(title, description)
+        self.model.upload_video(title, description, path)
         self.model.list_videos()
 
         return
@@ -104,12 +113,22 @@ class Controller:
         self.model.reset_is_video_uploaded()
 
         return
-    
+
+    def save_new_path(self, data):
+        print(data)
+        new_path = self.view.current_path_entry.get()
+        self.model.set_current_path(new_path)
+        self.view.current_path_entry.delete(0, END)
+        self.view.current_path_entry.insert(0, self.model.get_current_path())
+        self.model.list_videos()
+
     def update_videos_listbox_callback(self, data) -> None:
         self.view.videos_listbox.delete(0, END)
+        # Filter videos so that it will only show videos in current folder
+        data = [d for d in data if d.path.startswith(self.model.get_current_path())]
         for idx, video in enumerate(data):
             # print(video)
-            title = f'{idx}: {video.title}'
+            title = f'{idx}: {video.title} - {video.path}'
             self.view.videos_listbox.insert(END, title)
 
     def video_downloaded_callback(self, data) -> None:

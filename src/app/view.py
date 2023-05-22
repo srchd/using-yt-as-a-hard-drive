@@ -32,10 +32,20 @@ class View(tk.Toplevel):
 
         self.upload_file_button.pack()
 
+        # Path
+        self.path_frame = tk.Frame(self, pady=20)
+
+        self.selecting_file_label = tk.Label(self.path_frame, padx=20, text='Current path:')
+
+        self.current_path_entry = tk.Entry(self.path_frame, width=50)
+
+        self.selecting_file_label.pack(side=tk.LEFT)
+        self.current_path_entry.pack()
+
         # Videos Listbox Frame
         self.videos_listbox_frame = tk.Frame(self)
 
-        self.videos_listbox = tk.Listbox(self.videos_listbox_frame, height=15, width=90)
+        self.videos_listbox = tk.Listbox(self.videos_listbox_frame, height=12, width=90)
 
         self.videos_listbox.pack()
 
