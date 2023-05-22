@@ -42,6 +42,11 @@ class DataStorage:
 
 		self.logger.info("Created DataStorage")
 
+		if not DataStorage.CREDENTIALS_FOLDER.exists():
+			DataStorage.CREDENTIALS_FOLDER.mkdir(exist_ok=True)
+		if not DataStorage.GENERATED_FOLDER.exists():
+			DataStorage.GENERATED_FOLDER.mkdir(exist_ok=True)
+
 	@staticmethod
 	def get_file_name_from_path(path: str) -> str:
 		return path.split("/")[-1].split("\\")[-1]
