@@ -7,6 +7,7 @@ from logger.logger import log, logger
 
 import os
 import json
+import shutil
 
 
 class Model:
@@ -46,14 +47,21 @@ class Model:
 
         json_string = self.extract_json_string_from_description(video_to_download.description).replace("'", '"')
 
-        print(json_string)
-
         video_to_download_url = video_to_download.url
         # ======================================================
         # The line below only for testing, so won't exceed the quota
         # video_to_download_url = 'https://www.youtube.com/watch?v=eyQTJnMw5B0'
         # ======================================================
+        if not os.path.isdir('./files/'):
+            os.mkdir('./files')
+
         download_video_with_yt_dlp(video_to_download_url)
+        shutil.move(f'./{video_to_download.title}.mp4', f'./files/{video_to_download.title}.mp4')
+
+        filename = f'./files/{video_to_download.title}.mp4'
+
+        self.decode_video_to_file(filename, json.loads(json_string), video_to_download.path)
+        shutil.rmtree('./files')
 
         self.is_video_downloaded.set(True)
         logger.info('Video Downloaded')
@@ -134,6 +142,8 @@ class Model:
 
         logger.info('Video Uploaded')
 
+        shutil.rmtree('./files')
+
         return
 
     @log
@@ -149,5 +159,16 @@ class Model:
         return
 
     @log
-    def extract_json_string_from_description(self, desc) -> str:
+    def extract_json_string_from_description(self, desc : str) -> str:
         return desc.split('||')[1]
+    
+    @log
+    def decode_video_to_file(self, filename, arg_dict : dict, path) -> None:
+        patch_height = arg_dict['patch_height']
+        patch_width = arg_dict['patch_width']
+        repetitions = arg_dict['rep']
+
+        os.system('conda activate ythd')
+        os.system(f'call python ./src/processing/decode.py -v {filename} -o {path[1:]} --tail_size 704 --patch_height {patch_height} --patch_width {patch_width} --repetitions {repetitions}')
+
+        return
