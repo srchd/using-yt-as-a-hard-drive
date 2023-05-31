@@ -11,6 +11,7 @@ Prerequisites
 
  - A google account
  - Anaconda with `python>=3.9` [Download here](https://www.anaconda.com/download)
+ - FFMPEG and add it to PATH [Download here](https://ffmpeg.org/download.html)
  - Internet connection
 
 Getting your credentials
