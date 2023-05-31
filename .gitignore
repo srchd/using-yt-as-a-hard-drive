@@ -4,6 +4,9 @@ src/youtube/credentials/*.json
 
 src/youtube/upload_test_video.mp4
 
+# Encoder-decoder created files
+files/
+
 *.mp4
 
 '

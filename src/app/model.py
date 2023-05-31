@@ -5,6 +5,9 @@ from youtube.youtube_client import YoutubeClient
 from youtube import Path
 from logger.logger import log, logger
 
+import os
+import json
+
 
 class Model:
     # Set this variable to `None` when testing, so won't exceed the quota.
@@ -40,6 +43,11 @@ class Model:
         self.is_video_downloaded.set(False)
 
         video_to_download = self.videos_on_yt.get()[video_idx]
+
+        json_string = self.extract_json_string_from_description(video_to_download.description).replace("'", '"')
+
+        print(json_string)
+
         video_to_download_url = video_to_download.url
         # ======================================================
         # The line below only for testing, so won't exceed the quota
@@ -96,21 +104,50 @@ class Model:
         logger.info('Uploading video')
 
         self.is_video_uploaded.set(False)
+
+        __description = description.replace('||', '')
+
+        truncated_filename = self.get_selected_upload_filename().split('.')[0]
+
+        self.encode_file_to_video(self.get_selected_upload_filepath(), self.get_selected_upload_filename())
+
+        with open(f'./files/{truncated_filename}.json', 'r') as f:
+            data = json.load(f)
+
+        __description += '\n||' + str(data) + '||'
+
         # ======================================================
         # The lines below are only for testing, so won't exceed the quota
         # self.videos.append({
         #     'videoId': 'null',
         #     'publishedAt': 'JUST NOW',
         #     'title': title,
-        #     'description': description,
+        #     'description': __description,
         #     'publishTime': 'WHEN i SAID',
         #     'url': 'https://google.com',
-        #     'path': self.get_selected_upload_filepath()
+        #     'path': Path(self.get_selected_upload_filepath())
         # })
         # ======================================================
-        self.__youtube_client.upload_video(self.upload_selected_filepath.get(), title=title, description=description, path=Path(path))
+        self.__youtube_client.upload_video(f'./files/{truncated_filename}.mp4', title=title, description=__description, path=Path(path))
+
         self.is_video_uploaded.set(True)
 
-        logger.info('Video Uplaoded')
+        logger.info('Video Uploaded')
 
         return
+
+    @log
+    def encode_file_to_video(self, filepath, filename) -> None:
+        truncated_filename = filename.split('.')[0]
+
+        if not os.path.isdir('./files/'):
+            os.mkdir('./files')
+
+        os.system('conda activate ythd')
+        os.system(f'call python ./src/processing/encode.py -f {filepath} -o ./files/{truncated_filename}.mp4 -v ./src/examples/rick.mp4 --temp_path tmp --settings_file ./files/{truncated_filename}.json --repetitions 10 --patch_height 8 --patch_width 8')
+
+        return
+
+    @log
+    def extract_json_string_from_description(self, desc) -> str:
+        return desc.split('||')[1]
