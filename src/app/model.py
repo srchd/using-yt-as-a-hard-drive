@@ -108,7 +108,7 @@ class Model:
         return
 
     @log
-    def upload_video(self, title, description, path):
+    def upload_video(self, title, description, path, arguments_dict):
         logger.info('Uploading video')
 
         self.is_video_uploaded.set(False)
@@ -117,7 +117,7 @@ class Model:
 
         truncated_filename = self.get_selected_upload_filename().split('.')[0]
 
-        self.encode_file_to_video(self.get_selected_upload_filepath(), self.get_selected_upload_filename())
+        self.encode_file_to_video(self.get_selected_upload_filepath(), self.get_selected_upload_filename(), arguments_dict)
 
         with open(f'./files/{truncated_filename}.json', 'r') as f:
             data = json.load(f)
@@ -147,14 +147,19 @@ class Model:
         return
 
     @log
-    def encode_file_to_video(self, filepath, filename) -> None:
+    def encode_file_to_video(self, filepath, filename, arguments_dict) -> None:
         truncated_filename = filename.split('.')[0]
+        patch_height = arguments_dict.get('patch_height', 8)
+        patch_width = arguments_dict.get('patch_width', 8)
+        repetitions = arguments_dict.get('repetitions', 10)
+
+        print(patch_height, patch_width, repetitions)
 
         if not os.path.isdir('./files/'):
             os.mkdir('./files')
 
         os.system('conda activate ythd')
-        os.system(f'call python ./src/processing/encode.py -f {filepath} -o ./files/{truncated_filename}.mp4 -v ./src/examples/rick.mp4 --temp_path tmp --settings_file ./files/{truncated_filename}.json --repetitions 10 --patch_height 8 --patch_width 8')
+        os.system(f'call python ./src/processing/encode.py -f {filepath} -o ./files/{truncated_filename}.mp4 -v ./src/examples/rick.mp4 --temp_path tmp --settings_file ./files/{truncated_filename}.json --repetitions {repetitions} --patch_height {patch_height} --patch_width {patch_width}')
 
         return
 
