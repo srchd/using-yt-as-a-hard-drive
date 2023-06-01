@@ -1,6 +1,8 @@
 from model import Model
 from view import View
 from subwindows.upload_window import UploadWindow
+from utils.generic_functions import combine_funcs
+
 from tkinter import filedialog
 from tkinter import END, TOP
 
@@ -8,6 +10,8 @@ class Controller:
     def __init__(self, root) -> None:
         self.model = Model()
         self.view = View(root)
+
+        self.upload_window_submitted = False
 
         """
         YouTube Client stuff from here
@@ -59,19 +63,33 @@ class Controller:
         return
     
     def on_upload_file(self) -> None:
+        def on_upload_window_close() -> None:
+            self.upload_window_submitted = True
+
         file_path = self.model.upload_selected_filepath.get()
         if not file_path:
             file_path = ""
+        
+        self.upload_window_submitted = False
         upload_window = UploadWindow(self.view, file_path)
         upload_window.grab_set()  # Grabbing the UploadWindow, so user can't interact with the Main while this is open
+
+        upload_window.submit_button.config(command=combine_funcs(on_upload_window_close, upload_window.close_window))
 
         self.view.wait_window(upload_window)  # Waiting for the UploadWindow to be closed
 
         title = upload_window.title_var.get()
         description = upload_window.description_var.get()
         path = upload_window.path_var.get()
+        arguments_dict = {
+            'patch_height': upload_window.patch_height_var.get(),
+            'patch_width': upload_window.patch_width_var.get(),
+            'repetitions': upload_window.repetitions_var.get()
+        }
 
-        self.model.upload_video(title, description, path)
+        if self.upload_window_submitted:
+            self.model.upload_video(title, description, path, arguments_dict)
+
         self.model.list_videos()
 
         return
