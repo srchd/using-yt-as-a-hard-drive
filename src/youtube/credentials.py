@@ -97,13 +97,15 @@ class DataStorage:
 
 class Credentials:
 
-	def __init__(self):
+	def __init__(self, force_renew: bool = False):
 		self.logger = logging.getLogger(self.__class__.__name__)
 		self.logger.setLevel(logging.DEBUG)
 		sh = logging.StreamHandler(stream=sys.stdout)
 		formatter = logging.Formatter(YTHDSettings.LOG_FORMAT)
 		sh.setFormatter(formatter)
 		self.logger.addHandler(sh)
+
+		self.force_renew = force_renew
 
 		self.current_credential_index = 0
 		self.credential_indices = []
@@ -181,7 +183,7 @@ class Credentials:
 
 			generated_file_path = path
 			copied_file_path = possible_generated_files_dict[path]
-			if os.path.isfile(generated_file_path):
+			if not self.force_renew and os.path.isfile(generated_file_path):
 				credential_indices.append(file_index)
 			else:
 				retries = 10

@@ -9,6 +9,7 @@ import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import googleapiclient.errors
 import google.oauth2.credentials
+from google.auth.exceptions import RefreshError
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
@@ -33,13 +34,26 @@ class YoutubeClient:
 
         self.logger.info("Created YoutubeClient")
 
-    @staticmethod
-    def __test_client(client):
-        request = client.channels().list(
-            part="snippet,contentDetails,statistics",
-            mine=True
-        )
-        request.execute()
+    def __test_client(self, client):
+        i = 5
+        while i > 0:
+            try:
+                request = client.channels().list(
+                    part="snippet,contentDetails,statistics",
+                    mine=True
+                )
+                request.execute()
+            except RefreshError as ex:
+                if len(ex.args) > 1 and 'error_description' in ex.args[1] and "expired" in ex.args[1]['error_description']:
+                    self.logger.warning("Credentials expired, refreshing")
+                    self.credentials = Credentials(force_renew=True)
+                    i -= 1
+                else:
+                    raise ex
+            except Exception as ex:
+                raise ex
+            else:
+                return
 
     @staticmethod
     def __quota_exceeded(ex: HttpError):
@@ -48,7 +62,7 @@ class YoutubeClient:
     def get_build(self):
         credentials = self.credentials.get_current_credentials()
         client = build(ApiParameters.API_SERVICE_NAME, ApiParameters.API_VERSION, credentials=credentials)
-        YoutubeClient.__test_client(client)
+        self.__test_client(client)
         return client
 
     def __execute_request(self, method: Callable,  *args, **kwargs):
