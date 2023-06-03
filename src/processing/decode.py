@@ -77,7 +77,7 @@ def restore_from_video(
 	while True:
 
 		if counter % rep == 0 or the_end:
-			bin_seq = reduce_masks(candidates)
+			bin_seq = reduce_masks(candidates,patch_height,patch_width)
 			bin_seq_reconstructed += list(bin_seq)
 			candidates = []
 
